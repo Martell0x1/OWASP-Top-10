@@ -13,6 +13,15 @@ Welcome to the **OWASP Top 10** repository! 🌐💡 This project is a deep dive
 [A01-Acess Control](#a01--2021-broken-acess-control----------------a-05-2017)
 ---
 
+# Authentication.
+- confirms thaat the user who say they are (eta meen?)
+
+# session managment
+- a way to identify which subseequent HTTP requrests are beign made by each user (ya3ne lama azoor authenticated pages (edit profile) instead of entring the password and username on each page , we use session managment)
+
+# access control
+- determine wether the user is allowed to do the action they intened to do (authorization)
+
 # A01--2021-Broken Acess Control <--------------> (A-05-2017)
 - Access control is the application of constraints on who or what is authorized to perform actions or access resources. In the context of web applications, access control is dependent on authentication and session management: 
         - Authentication confirms that the user is who they say they are.
@@ -230,10 +239,14 @@ Welcome to the **OWASP Top 10** repository! 🌐💡 This project is a deep dive
 
     - With vertical access controls, different types of users have access to different application functions. For example, an administrator might be able to modify or delete any user's account, while an ordinary user has no access to these actions. Vertical access controls can be more fine-grained implementations of security models designed to enforce business policies such as separation of duties and least privilege.
 
+    - used to restrict access to functions not available for other users in the organization.(admin , regular user)
+
     ### Horizontal access controls
     - Horizontal access controls are mechanisms that restrict access to resources to specific users.
 
-    - With horizontal access controls, different users have access to a subset of resources of the same type. For example, a banking application will allow a user to view transactions and make payments from their own accounts, but not the accounts of any other user. 
+    - With horizontal access controls, different users have access to a subset of resources of the same type. For example, a banking application will allow a user to view transactions and make payments from their own accounts, but not the accounts of any other user.
+
+    - restrict different users with same level of previllages to access similar resource types
 
     ### Context-dependent access controls
 
@@ -321,5 +334,44 @@ Welcome to the **OWASP Top 10** repository! 🌐💡 This project is a deep dive
         ```
         - If the application processes the X-Original-URL header without validating the request method or the user's permissions against it, the attacker can bypass the intended access controls.
     
-        - [Lab](https://portswigger.net/web-security/access-control/lab-url-based-access-control-can-be-circumvented)
+       - [Lab](https://portswigger.net/web-security/access-control/lab-url-based-access-control-can-be-circumvented)
+
+       - An alternative attack relates to the HTTP method used in the request. The front-end controls described in the previous sections restrict access based on the URL and HTTP method. Some websites tolerate different HTTP request methods when performing an action. If an attacker can use the GET (or another) method to perform actions on a restricted URL, they can bypass the access control that is implemented at the platform layer.
+
+        ### IDOR (Insecure-Direct-Object-Reference)
+        - Insecure direct object references (IDOR) are a type of access control vulnerability that arises when an application uses user-supplied input to access objects directly. The term IDOR was popularized by its appearance in the OWASP 2007 Top Ten. However, it is just one example of many access control implementation mistakes that can lead to access controls being circumvented. IDOR vulnerabilities are most commonly associated with horizontal privilege escalation, but they can also arise in relation to vertical privilege escalation.
+            #### IDOR vulnerability with direct reference to database objects
+            
+
+        ### Horizontal Privilage Escalation
+        - when an attacker gain access to resources beloning to another user of the same privilege level.
+
+        ### multi-step processes
+        - when access controls are applied on some of the steps, but ignored on others
+
+
+    ## Detection
+    - how to detect the access controls ?
+        ### Black-Box Testing
+        - Tester given few information about the system
+        - map the application:
+            - access all the pages in the application (within your account previlages) , idetify where the web app appears to be interacting with the underlying os
+            , make a proxy work in silent to fetch your visited pages
+
+        - understand how access control is implemented for each privilage level
+        - manipluate the parameters
+        - automate the process (Autorize)
+
+        ### White-Box Testing
+        - Teser given lots of information about the system
+        - review the code to identify how access control is implemented
+
+        - system defaults to open
+        - missing / weak access control checks on functions/resources
+        - missing AC rules for POST/PUT/DELETE methods at the API level        
+
+    ## Exploitation
+    - how to exploit the AC ?
+        - depends on the type of AC
+        - just manipulate the vulnerable field / params
 
